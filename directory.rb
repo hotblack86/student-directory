@@ -13,28 +13,37 @@ students = [
   {name: "Norman Bates", cohort: :november, hobbies: :villainy}
 ]
 
-def interactive_menu
-  students = []
-  loop do
-    # 1. print the menu and ask the user what to do
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "9. Exit" # 9 because we'll be adding more items
-    # 2. read the input and save it into a variable
-    selection = gets.chomp
-    # 3. do what the user has asked
-    case selection
+@students = []
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit" # 9 because we'll be adding more items
+end
+
+def show_students
+  print_header
+  print_students_list
+  print_footer
+end
+
+def process(selection)
+  case selection
     when "1"
-      students = input_students
+      input_students
     when "2"
-      print_header
-      print(students)
-      print_footer(students)
+      show_students
     when "9"
-      exit # this will cause the program to terminate
+      exit
     else
-      puts "I don't know what you meant, try again"
-    end
+      puts "I don't know what you mean, try again"
+  end
+end
+
+def interactive_menu
+  loop do
+    print_menu
+    process(gets.chomp)
   end
 end
 
@@ -50,17 +59,17 @@ def input_students
   cohort.intern
   cohort = "november" if cohort.empty?
 
-  while !name.empty? do
-    students << {name: name, cohort: cohort}
-    if students.count > 1
-      puts "Now we have #{students.count} students"
-    elsif students.count == 1
-      puts "Now we have #{students.count} student"
+  while !name.empty? && !cohort.empty? do
+    @students << {name: name, cohort: cohort}
+    if @students.count > 1
+      puts "Now we have #{@students.count} students"
+    elsif @students.count == 1
+      puts "Now we have #{@students.count} student"
     end
     name = gets.gsub("\n", "")
     cohort = gets.gsub("\n", "")
   end
-  students
+
 end
 
 def print_header
@@ -68,23 +77,23 @@ def print_header
   puts "-------------"
 end
 
-def print(students)
+def print_students_list
   puts "Students beginning with which letter?"
   first_letter = gets.gsub("\n", "")
   first_letter.upcase!
 
-  students.each.with_index(1) do |student, index|
+  @students.each.with_index(1) do |student, index|
     if student[:name].slice(0) == first_letter && student[:name].length < 12
       puts "#{index}. #{student[:name]} (#{student[:cohort]} cohort)".center(40)
     end
   end
 end
 
-def print_footer(students)
-  if students.count > 1
-    puts "Overall, we have #{students.count} great students".center(40)
-  elsif students.count == 1
-    puts "Overall, we have #{students.count} great student".center(40)
+def print_footer
+  if @students.count > 1
+    puts "Overall, we have #{@students.count} great students".center(40)
+  elsif @students.count == 1
+    puts "Overall, we have #{@students.count} great student".center(40)
   end
 end
 #nothing happens until we call the methods
