@@ -49,7 +49,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -57,11 +57,11 @@ def input_students
   puts "Please enter the name of the students"
   puts "To finish, just hit return twice"
   students = []
-  name = gets.gsub("\n", "")
+  name = STDIN.gets.gsub("\n", "")
 
   puts "Please enter the cohort of the students"
   puts "To finish, just hit return twice"
-  cohort = gets.gsub("\n", "")
+  cohort = STDIN.gets.gsub("\n", "")
   cohort.intern
   cohort = "november" if cohort.empty?
 
@@ -74,10 +74,10 @@ def input_students
     end
     puts "Please enter the name of the students"
     puts "To finish, just hit return twice"
-    name = gets.gsub("\n", "")
+    name = STDIN.gets.gsub("\n", "")
     puts "Please enter the cohort of the students"
     puts "To finish, just hit return twice"
-    cohort = gets.gsub("\n", "")
+    cohort = STDIN.gets.gsub("\n", "")
   end
 
 end
@@ -89,7 +89,7 @@ end
 
 def print_students_list
   puts "Students beginning with which letter?"
-  first_letter = gets.gsub("\n", "")
+  first_letter = STDIN.gets.gsub("\n", "")
   first_letter.upcase!
 
   @students.each.with_index(1) do |student, index|
@@ -119,7 +119,7 @@ def save_students
   file.close
 end
 
-def load_students
+def load_students(filename = "students.csv")
   file = File.open("students.csv", "r")
   file.readlines.each do |line|
   name, cohort = line.chomp.split(',')
@@ -127,7 +127,21 @@ def load_students
   end
   file.close
 end
-#nothing happens until we call the methods
+
+def try_load_students
+  filename = ARGV.first # first argument from the command line
+  return if filename.nil? # get out of the method if it isn't given
+  if File.exists?(filename) # if it exists
+    load_students(filename)
+     puts "Loaded #{@students.count} from #{filename}"
+  else # if it doesn't exist
+    puts "Sorry, #{filename} doesn't exist."
+    exit # quit the program
+  end
+end
+
+load_students
+try_load_students
 interactive_menu
 #students = input_students
 #print_header
