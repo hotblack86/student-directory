@@ -18,6 +18,7 @@ students = [
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
+  puts "3. Save the list to students.csv"
   puts "9. Exit" # 9 because we'll be adding more items
 end
 
@@ -33,6 +34,8 @@ def process(selection)
       input_students
     when "2"
       show_students
+    when "3"
+      save_students
     when "9"
       exit
     else
@@ -66,7 +69,11 @@ def input_students
     elsif @students.count == 1
       puts "Now we have #{@students.count} student"
     end
+    puts "Please enter the name of the students"
+    puts "To finish, just hit return twice"
     name = gets.gsub("\n", "")
+    puts "Please enter the cohort of the students"
+    puts "To finish, just hit return twice"
     cohort = gets.gsub("\n", "")
   end
 
@@ -95,6 +102,18 @@ def print_footer
   elsif @students.count == 1
     puts "Overall, we have #{@students.count} great student".center(40)
   end
+end
+
+def save_students
+  # open the file for writing
+  file = File.open("students.csv", "w")
+  # iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
 #nothing happens until we call the methods
 interactive_menu
