@@ -37,8 +37,10 @@ def process(selection)
       show_students
     when "3"
       save_students
+      puts "List succesfully saved"
     when "4"
       load_students
+      puts "List succesfully loaded"
     when "9"
       exit
     else
@@ -56,7 +58,6 @@ end
 def input_students
   puts "Please enter the name of the students"
   puts "To finish, just hit return twice"
-  students = []
   name = STDIN.gets.gsub("\n", "")
 
   puts "Please enter the cohort of the students"
@@ -108,9 +109,11 @@ def print_footer
 end
 
 def save_students
+  puts "Which file would you like to save the students in?:"
+  file_save = STDIN.gets.gsub("\n", "")
   # open the file for writing
-  file = File.open("students.csv", "w")
-  # iterate over the array of students
+
+  file = File.open(file_save, "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
@@ -120,7 +123,13 @@ def save_students
 end
 
 def load_students(filename = "students.csv")
-  file = File.open("students.csv", "r")
+  puts "Which file would you like to load the students from?:"
+  file_load = STDIN.gets.gsub("\n", "")
+  if file_load.empty?
+    file_load = "students.csv"
+  end
+
+  file = File.open(file_load, "r")
   file.readlines.each do |line|
   name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
@@ -140,10 +149,9 @@ def try_load_students
   end
 end
 
-load_students
+def add_students
+  @students << {name: name, cohort: cohort}
+end
+
 try_load_students
 interactive_menu
-#students = input_students
-#print_header
-#print(students)
-#print_footer(students)
